@@ -103,6 +103,7 @@ def anomalous_detection(l,amount,timestamp,item,D,T,flagged_file):
     #Need to modify the code to be able to update the D-networks quick/automatically
     #when new edge is added or an edge is removed.
         #if new edge
+    import numpy as np
     if (item['event_type']=='befriend'):
         id1bf=int(item['id1'])
         id2bf=int(item['id2'])
@@ -111,10 +112,23 @@ def anomalous_detection(l,amount,timestamp,item,D,T,flagged_file):
         #If new purchase:
     if (item['event_type']=='purchase'):#if (item['event_type']=='purchase'):            
         id=int(item['id'])
-        amount=add_to_list(amount,id,float(item['amount']))
+        new_purchase=float(item['amount'])  
+        amount=add_to_list(amount,id,new_purchase)
         timestamp=add_to_list(timestamp,id,item['timestamp'])
-        qnw = bfs(l,id,D,T)
-        purchase(float(item['amount']),flagged_file,item['timestamp'],qnw,amount[id][-1*min(T,len(amount[id])-1):])
+        s=amount[id][-1*min(T,len(amount[id])-1):];
+        if len(s)>2:
+            mean_s=np.mean(s)
+            sd_s=np.std(s)        
+            #new_purchase is good send everyon on qnw.
+            if (np.abs(new_purchase-mean_s)>3*sd_s):
+                qnw = bfs(l,id,D,T)
+                file = open(flagged_file,'a')
+                for id in qnw[1:]:
+                    str1="{\"event_type\":\"purchase\", \"timestamp\":\""
+                    str1=str1+item['timestamp']+"\",\"id\":"+"\"" + str(id) + "\", \"amount\": \""+str(new_purchase)+"\", \"mean\": \""
+                    str1=str1+str(round(mean_s,2))+"\", \"sd\": \""+str(round(sd_s,2))+"\"}\n"
+                    file.write(str1)
+                file.close()
     if (item['event_type']=='ufriend'):
         id1bf=int(item['id1'])
         id2bf=int(item['id2'])
