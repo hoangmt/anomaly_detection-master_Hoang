@@ -3,10 +3,8 @@
 #1. add_to_list: to add value(node id, time stamp, amount purchase) to 
 #the corresponding list l
 #2. remove_edge: to remove edge
-#3. purchase(new_purchase,log_file,time_stamp,qnw,s): what needs to be done
-#when a purchase is made.
-#4. def bfs(s,i,D,T): find the D-netowrk of the node i using breath first seach
-#5. initialize_nw(batch_log_file): to generate network, amount purchased from each node and timestamp form batch_log_file
+#3. def bfs(s,i,D,T): find the D-netowrk of the node i using breath first seach
+#4. initialize_nw(batch_log_file): to generate network, amount purchased from each node and timestamp form batch_log_file
 # 
 def add_to_list(l,id1,value):
     # To add to list of vertices, edges or purchases 
@@ -30,20 +28,6 @@ def remove_edge(l,id1uf,id2uf):
            if id1uf in l[id2uf]: 
                l[id2uf].remove(id1uf)
     return l
-def purchase(new_purchase,log_file,time_stamp,qnw,s):
-    #from datetime import datetime as dt
-    import numpy as np
-    mean_s=np.mean(s)
-    sd_s=np.std(s)
-    #new_purchase is good send everyon on qnw.
-    if (np.abs(new_purchase-mean_s)>3*sd_s):
-        file = open(log_file,'a')
-        for id in qnw[1:]:
-            str1="{\"event_type\":\"purchase\", \"timestamp\":\""
-            str1=str1+time_stamp+"\",\"id\":"+"\"" + str(id) + "\", \"amount\": \""+str(new_purchase)+"\", \"mean\": \""
-            str1=str1+str(round(mean_s,2))+"\", \"sd\": \""+str(round(sd_s,2))+"\"}\n"
-            file.write(str1)
-        file.close()
 # In[]
 def bfs(s,i,D,T):
     #This function will find the tree by breadth first search
