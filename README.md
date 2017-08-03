@@ -1,4 +1,4 @@
-This program is will identify anomalous purchase made by an user and notify all people in his/her network. The main idea is to construct the network from the batch file and store in a list of adjacency edges for each node.
+This program will identify anomalous purchase made by an user and notify all people in his/her network. The main idea is to construct the network from the batch file and store in a list of adjacency edges for each node.
 
 Each time when a new purchase is made by a node i, decide if this purchase is anomalous or not, run breath first search with starting point from node i to find the D-network of i and notify everyone in this network.
 
